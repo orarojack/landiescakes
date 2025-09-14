@@ -36,6 +36,7 @@ import { useCart } from "@/components/modern/cart-provider"
 import { useToast } from "@/components/providers/toast-provider"
 import { RatingStars, ReviewForm } from "@/components/modern/rating-stars"
 import { useSession } from "next-auth/react"
+import { CakeCustomization } from "@/components/modern/cake-customization"
 
 interface CakeDetailPageProps {
   params: {
@@ -57,6 +58,8 @@ export default function CakeDetailPage({ params }: CakeDetailPageProps) {
   const [userReview, setUserReview] = useState<any>(null)
   const [showReviewForm, setShowReviewForm] = useState(false)
   const [submittingReview, setSubmittingReview] = useState(false)
+  const [showCustomization, setShowCustomization] = useState(false)
+  const [customization, setCustomization] = useState<any>(null)
   const { addToCart } = useCart();
   const toast = useToast();
 
@@ -400,8 +403,20 @@ export default function CakeDetailPage({ params }: CakeDetailPageProps) {
                   Add to Cart
                 </Button>
                 <Button
+                  onClick={() => setShowCustomization(true)}
                   variant="outline"
                   className="px-6 sm:px-8 py-3 sm:py-4 rounded-2xl border-2 border-orange-500 text-orange-500 hover:bg-orange-50 font-bold text-base sm:text-lg"
+                >
+                  Customize Your Cake
+                </Button>
+                <Button
+                  onClick={() => {
+                    // Direct checkout logic
+                    handleAddToCart()
+                    // Navigate to checkout
+                    window.location.href = '/checkout'
+                  }}
+                  className="px-6 sm:px-8 py-3 sm:py-4 rounded-2xl bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   Buy Now
                 </Button>
@@ -794,74 +809,25 @@ export default function CakeDetailPage({ params }: CakeDetailPageProps) {
             </TabsContent>
 
             <TabsContent value="customization" className="mt-6 sm:mt-8">
-              <Card className="border-0 shadow-xl rounded-2xl sm:rounded-3xl">
-                <CardHeader>
-                  <CardTitle className="text-xl sm:text-2xl font-black">Customize Your Cake</CardTitle>
-                  <p className="text-gray-600 text-sm sm:text-base">Make this cake uniquely yours with our customization options</p>
-                </CardHeader>
-                <CardContent className="space-y-6 sm:space-y-8">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-                    <div>
-                      <h4 className="font-bold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Custom Message</h4>
-                      <Input
-                        placeholder="Enter your custom message..."
-                        className="rounded-2xl border-2 focus:border-orange-500"
-                      />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Color Theme</h4>
-                      <div className="flex flex-wrap gap-2 sm:gap-3">
-                        {["Pink", "Blue", "Gold", "Silver", "Rainbow"].map((color) => (
-                          <button
-                            key={color}
-                            className="px-3 py-2 sm:px-4 sm:py-2 rounded-2xl border-2 border-gray-200 hover:border-orange-500 transition-colors text-xs sm:text-sm"
-                          >
-                            {color}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Upload Photo (Optional)</h4>
-                    <div className="border-2 border-dashed border-gray-300 rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center hover:border-orange-400 transition-colors">
-                      <Camera className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
-                      <p className="text-gray-600 mb-2 text-sm sm:text-base">Upload a photo to be printed on your cake</p>
-                      <p className="text-xs sm:text-sm text-gray-500">JPG, PNG up to 5MB</p>
-                      <Button variant="outline" className="mt-3 sm:mt-4 rounded-2xl text-sm sm:text-base">
-                        Choose File
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Special Instructions</h4>
-                    <Textarea
-                      placeholder="Any special requests or dietary requirements..."
-                      className="rounded-2xl border-2 focus:border-orange-500"
-                      rows={4}
-                    />
-                  </div>
-
-                  <div className="bg-orange-50 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-orange-200">
-                    <div className="flex items-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
-                      <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-orange-600" />
-                      <h4 className="font-bold text-gray-900 text-sm sm:text-base">Delivery Date</h4>
-                    </div>
-                    <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">Custom cakes require 24-48 hours advance notice</p>
-                    <Input
-                      type="date"
-                      className="rounded-2xl border-2 focus:border-orange-500 bg-white"
-                      min={new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]}
-                    />
-                  </div>
-
-                  <Button className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 rounded-2xl py-3 sm:py-4 text-base sm:text-lg font-bold">
-                    Add Customized Cake to Cart (+KSh 1,000)
-                  </Button>
-                </CardContent>
-              </Card>
+              <CakeCustomization
+                basePrice={cake.price}
+                onCustomizationChange={setCustomization}
+                onAddToCart={(customizedCake) => {
+                  addToCart({
+                    id: cake.id,
+                    name: cake.name,
+                    price: customizedCake.totalPrice,
+                    originalPrice: cake.originalPrice,
+                    image: cake.images?.[0] || "",
+                    seller: cake.seller?.businessName || "Unknown Seller",
+                    inStock: cake.inStock !== false,
+                    freeShipping: cake.freeShipping || false,
+                    customization: customizedCake,
+                  })
+                  toast.success("Customized cake added to cart!")
+                  setShowCustomization(false)
+                }}
+              />
             </TabsContent>
           </Tabs>
         </div>

@@ -347,14 +347,16 @@ export default function HomePage() {
                     <ArrowRight className="h-6 w-6 ml-3 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-3xl px-10 py-6 text-xl font-bold backdrop-blur-sm transition-all duration-500 group"
-                >
-                  <Play className="h-6 w-6 mr-3" />
-                  Watch Story
-                </Button>
+                <Link href="#testimonials">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-3xl px-10 py-6 text-xl font-bold backdrop-blur-sm transition-all duration-500 group"
+                  >
+                    <Star className="h-6 w-6 mr-3" />
+                    Customer Stories
+                  </Button>
+                </Link>
               </div>
 
               {/* Stats */}
@@ -423,78 +425,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categories Grid */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-orange-100 to-pink-100 rounded-full px-8 py-4 mb-8">
-              <Sparkles className="h-6 w-6 text-orange-600" />
-              <span className="text-lg font-bold text-gray-700">Explore Our Collection</span>
-            </div>
-            <h2 className="text-6xl md:text-7xl font-black text-gray-900 mb-8">
-              Every
-              <span className="block bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
-                Occasion
-              </span>
-              <span className="block text-gray-900">Covered</span>
-            </h2>
-            <p className="text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              From intimate celebrations to grand festivities, discover the perfect cake for every moment that matters
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
-            {categories.map((category, index) => (
-              <Link key={index} href={category.href}>
-                <Card className="group hover:shadow-2xl transition-all duration-700 cursor-pointer border-0 shadow-lg overflow-hidden bg-white hover:-translate-y-4 rounded-3xl">
-                  <CardContent className="p-0">
-                    <div className="relative overflow-hidden rounded-t-3xl">
-                      <Image
-                        src={category.image || "/placeholder.svg"}
-                        alt={category.name}
-                        width={400}
-                        height={300}
-                        className="w-full h-40 object-cover group-hover:scale-125 transition-transform duration-700"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = "/placeholder.svg";
-                        }}
-                        priority={index < 4}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                      <div className="absolute top-4 left-4 text-4xl group-hover:scale-125 transition-transform duration-500">
-                        {category.icon}
-                      </div>
-                    </div>
-                    <div className="p-6 text-center">
-                      <h3 className="font-black text-lg mb-2 text-gray-900 group-hover:text-orange-600 transition-colors">
-                        {category.name}
-                      </h3>
-                      <p className="text-gray-500 font-semibold">{category.count}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-
-          <div className="text-center mt-16">
-            <Link href="/cakes">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-orange-200 text-orange-600 hover:bg-orange-50 rounded-3xl px-12 py-6 text-xl font-bold transition-all duration-500 group"
-              >
-                View All Categories
-                <ChevronRight className="h-6 w-6 ml-3 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Flash Sales Section */}
-      <section className="py-16">
+      {/* Flash Sales Section - Moved Up */}
+      <section className="py-16 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -594,6 +526,129 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Slideshow of Sold Cakes */}
+      <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-pink-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
+              Recently{" "}
+              <span className="bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+                Sold
+              </span>
+            </h2>
+            <p className="text-xl text-gray-600">Take a look at some of our successful deliveries</p>
+          </div>
+
+          <div className="relative overflow-hidden">
+            <div className="flex space-x-6 animate-scroll">
+              {[...Array(10)].map((_, i) => (
+                <div key={i} className="flex-shrink-0 w-80">
+                  <Card className="border-0 shadow-lg overflow-hidden bg-white rounded-3xl">
+                    <CardContent className="p-0">
+                      <div className="relative overflow-hidden rounded-t-3xl">
+                        <Image
+                          src={`https://images.unsplash.com/photo-${1558618666 + i * 1000}?w=400&h=300&fit=crop`}
+                          alt={`Sold Cake ${i + 1}`}
+                          width={400}
+                          height={300}
+                          className="w-full h-48 object-cover"
+                        />
+                        <div className="absolute top-4 left-4">
+                          <Badge className="bg-green-500 text-white border-0 shadow-lg rounded-2xl px-3 py-1 font-bold">
+                            Delivered
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-bold text-lg text-gray-900 mb-2">Beautiful Cake #{i + 1}</h3>
+                        <p className="text-sm text-gray-600 mb-3">Delivered to happy customer</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center bg-yellow-50 rounded-full px-2 py-1">
+                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                            <span className="text-xs font-bold ml-1 text-gray-700">5.0</span>
+                          </div>
+                          <span className="text-sm text-gray-500">2 days ago</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Categories Grid */}
+      <section className="py-24 bg-white relative overflow-hidden">
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-orange-100 to-pink-100 rounded-full px-8 py-4 mb-8">
+              <Sparkles className="h-6 w-6 text-orange-600" />
+              <span className="text-lg font-bold text-gray-700">Explore Our Collection</span>
+            </div>
+            <h2 className="text-6xl md:text-7xl font-black text-gray-900 mb-8">
+              Every
+              <span className="block bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+                Occasion
+              </span>
+              <span className="block text-gray-900">Covered</span>
+            </h2>
+            <p className="text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              From intimate celebrations to grand festivities, discover the perfect cake for every moment that matters
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
+            {categories.map((category, index) => (
+              <Link key={index} href={category.href}>
+                <Card className="group hover:shadow-2xl transition-all duration-700 cursor-pointer border-0 shadow-lg overflow-hidden bg-white hover:-translate-y-4 rounded-3xl">
+                  <CardContent className="p-0">
+                    <div className="relative overflow-hidden rounded-t-3xl">
+                      <Image
+                        src={category.image || "/placeholder.svg"}
+                        alt={category.name}
+                        width={400}
+                        height={300}
+                        className="w-full h-40 object-cover group-hover:scale-125 transition-transform duration-700"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "/placeholder.svg";
+                        }}
+                        priority={index < 4}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <div className="absolute top-4 left-4 text-4xl group-hover:scale-125 transition-transform duration-500">
+                        {category.icon}
+                      </div>
+                    </div>
+                    <div className="p-6 text-center">
+                      <h3 className="font-black text-lg mb-2 text-gray-900 group-hover:text-orange-600 transition-colors">
+                        {category.name}
+                      </h3>
+                      <p className="text-gray-500 font-semibold">{category.count}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center mt-16">
+            <Link href="/cakes">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-orange-200 text-orange-600 hover:bg-orange-50 rounded-3xl px-12 py-6 text-xl font-bold transition-all duration-500 group"
+              >
+                View All Categories
+                <ChevronRight className="h-6 w-6 ml-3 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Products Section */}
       <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-pink-50">
         <div className="container mx-auto px-6">
@@ -690,8 +745,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-24 bg-gradient-to-br from-gray-50 via-white to-blue-50/20 relative overflow-hidden">
+      {/* Customer Stories (Testimonials) */}
+      <section id="testimonials" className="py-24 bg-gradient-to-br from-gray-50 via-white to-blue-50/20 relative overflow-hidden">
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-20">
             <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full px-8 py-4 mb-8">

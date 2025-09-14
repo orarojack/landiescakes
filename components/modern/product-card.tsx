@@ -145,9 +145,15 @@ export function ProductCard({ product, viewMode = "grid", isInWishlist = false }
 
         <div className={`p-6 ${viewMode === "list" ? "flex-1 flex flex-col justify-between" : ""}`}>
           <div>
-            {/* Seller */}
+            {/* Seller - Minimal Display */}
             <div className="flex items-center justify-between mb-3">
-              <p className="text-sm text-gray-500 font-semibold">by {product.seller}</p>
+              <div className="flex items-center space-x-2">
+                <p className="text-xs text-gray-400">by {product.seller}</p>
+                <div className="flex items-center bg-yellow-50 rounded-full px-2 py-1">
+                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                  <span className="text-xs font-bold ml-1 text-gray-700">{product.rating}</span>
+                </div>
+              </div>
               {product.freeShipping && (
                 <div className="flex items-center text-green-600 text-xs font-bold">
                   <Truck className="h-3 w-3 mr-1" />
@@ -206,6 +212,17 @@ export function ProductCard({ product, viewMode = "grid", isInWishlist = false }
                   View Details
                 </Button>
               </Link>
+              <Button
+                onClick={() => {
+                  handleAddToCart()
+                  // Navigate to checkout
+                  window.location.href = '/checkout'
+                }}
+                disabled={!product.inStock || isLoading}
+                className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 py-3 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Buy Now
+              </Button>
               <Button
                 onClick={handleAddToCart}
                 disabled={!product.inStock || isLoading}

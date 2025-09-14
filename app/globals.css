@@ -99,6 +99,27 @@
   .shadow-glow-purple {
     box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
   }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
 }
 
 /* Custom scrollbar */

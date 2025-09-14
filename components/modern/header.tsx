@@ -81,9 +81,12 @@ export function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3 group">
               <div className="w-12 h-12 flex items-center justify-center">
-                <Image src="/landy-logo.jpg" alt="Landy Cakes & Pastries Logo" width={48} height={48} className="rounded-full shadow-lg object-cover" />
+                <Image src="/landy-logo.jpg" alt="Landy's Logo" width={48} height={48} className="rounded-full shadow-lg object-cover" />
               </div>
-              <span className="text-3xl font-black text-gray-900 tracking-tight group-hover:text-orange-600 transition-colors duration-300">LandyCakes</span>
+              <div className="flex flex-col">
+                <span className="text-2xl font-black text-gray-900 tracking-tight group-hover:text-orange-600 transition-colors duration-300">LandyCakes</span>
+                <span className="text-xs text-orange-600 font-medium">and Pastries</span>
+              </div>
             </Link>
 
             {/* Desktop Navigation */}
@@ -96,10 +99,10 @@ export function Header() {
                 <span className="absolute left-0 bottom-0 w-full h-1 bg-gradient-to-r from-orange-500 to-pink-500 rounded-b-xl scale-x-0 group-hover:scale-x-100 transition-transform duration-300 z-0" />
               </Link>
               <Link
-                href="/sellers"
+                href="/location"
                 className="relative px-4 py-2 font-semibold text-gray-800 rounded-xl transition-all duration-200 group hover:text-white hover:shadow-lg hover:scale-105 bg-gradient-to-r from-orange-50 to-pink-50 hover:from-pink-500 hover:to-orange-500"
               >
-                <span className="relative z-10">Find Sellers</span>
+                <span className="relative z-10">Location</span>
                 <span className="absolute left-0 bottom-0 w-full h-1 bg-gradient-to-r from-pink-500 to-orange-500 rounded-b-xl scale-x-0 group-hover:scale-x-100 transition-transform duration-300 z-0" />
               </Link>
               {session?.user?.role === "SELLER" && (
@@ -258,8 +261,8 @@ export function Header() {
                 <Link href="/cakes" className="block text-gray-700 hover:text-orange-600 font-medium transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                   Explore Cakes
                 </Link>
-                <Link href="/sellers" className="block text-gray-700 hover:text-orange-600 font-medium transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                  Find Sellers
+                <Link href="/location" className="block text-gray-700 hover:text-orange-600 font-medium transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                  Location
                 </Link>
                 {session?.user?.role === "SELLER" && (
                   <Link href="/seller/products" className="block text-gray-700 hover:text-orange-600 font-medium transition-colors" onClick={() => setIsMobileMenuOpen(false)}>

@@ -43,6 +43,8 @@ export default function CheckoutPage() {
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'processing' | 'success' | 'failed'>('pending');
   const [orderId, setOrderId] = useState<string | null>(null);
   const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(null);
+  const [vendorAccepted, setVendorAccepted] = useState(false);
+  const [vendorAcceptanceTime, setVendorAcceptanceTime] = useState<Date | null>(null);
 
   // Debug log
   console.log("[DEBUG] CheckoutPage cartItems:", cartItems);
@@ -131,6 +133,10 @@ export default function CheckoutPage() {
             clearCart();
             toast.success("Payment successful! Your order has been confirmed.");
             clearInterval(pollInterval);
+            
+            // Start vendor acceptance polling
+            startVendorAcceptancePolling(orderId);
+            
             setTimeout(() => {
               router.push("/orders");
             }, 3000);
@@ -155,6 +161,30 @@ export default function CheckoutPage() {
         setPaymentStatus('failed');
         setError("Payment timeout. Please check your phone and try again.");
       }
+    }, 300000); // 5 minutes
+  };
+
+  // Poll vendor acceptance status
+  const startVendorAcceptancePolling = (orderId: string) => {
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch(`/api/orders/${orderId}/vendor-status`);
+        const data = await response.json();
+        
+        if (response.ok && data.vendorAccepted) {
+          setVendorAccepted(true);
+          setVendorAcceptanceTime(new Date());
+          toast.success("Vendor has accepted your order! Your cake will be prepared soon.");
+          clearInterval(pollInterval);
+        }
+      } catch (error) {
+        console.error("Error checking vendor acceptance:", error);
+      }
+    }, 5000); // Poll every 5 seconds
+
+    // Stop polling after 5 minutes
+    setTimeout(() => {
+      clearInterval(pollInterval);
     }, 300000); // 5 minutes
   };
 
@@ -221,6 +251,33 @@ export default function CheckoutPage() {
             </div>
             <h2 className="text-2xl font-bold text-green-600 mb-2">Payment Successful!</h2>
             <p className="text-gray-700 mb-6">Thank you for your purchase. Your order has been confirmed.</p>
+            
+            {vendorAccepted ? (
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
+                <div className="flex items-center space-x-2 mb-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span className="font-semibold text-green-800">Vendor Accepted Order</span>
+                </div>
+                <p className="text-green-700 text-sm">
+                  Your cake will be prepared and delivered as requested.
+                  {vendorAcceptanceTime && (
+                    <span className="block mt-1">
+                      Accepted at: {vendorAcceptanceTime.toLocaleTimeString()}
+                    </span>
+                  )}
+                </p>
+              </div>
+            ) : (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Clock className="h-5 w-5 text-yellow-600" />
+                  <span className="font-semibold text-yellow-800">Waiting for Vendor Acceptance</span>
+                </div>
+                <p className="text-yellow-700 text-sm">
+                  The vendor will review and accept your order within 5 minutes.
+                </p>
+              </div>
+            )}
             <div className="space-y-3">
               <Button onClick={() => router.push("/orders")} className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-2xl py-3 font-semibold shadow-lg">
                 View My Orders
